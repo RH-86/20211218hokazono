@@ -8,10 +8,9 @@ use Illuminate\Http\Request;
 class TodoController extends Controller
 {
     public function index()
-    {   //データ取得するがされない
-            $items = Todo::all();
-            $form = Todo::find($request->id);
-        return view('index',compact('items','form'));
+    {
+        $items = Todo::all();
+        return view('index',['items' => $items]);
     }
 
     public function create(Request $request)
@@ -21,16 +20,16 @@ class TodoController extends Controller
         Todo::create($form);
         return redirect('/');
     }
-    //更新されない
+
     public function update(Request $request)
     {
         $this->validate($request, Todo::$rules);
         $form = $request->all();
         unset($form['_token']);
-        Todo::find($request->content)->update($form);
+        Todo::where('id',$request->id)->update($form);
         return redirect('/');
     }
-    //削除できない
+    
     public function delete(Request $request)
     {
         Todo::find($request->id)->delete();
